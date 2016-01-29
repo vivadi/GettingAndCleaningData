@@ -28,19 +28,25 @@ rm(Test,Train)
 
 #Load Features into a Data.Table
 features=      fread(paste0(DIR,"features.txt"            ))
-features$V2=sub( "BodyBody","Body "           ,features$V2)
-features$V2=sub( "Body"    ,"Body "           ,features$V2)
-features$V2=sub( "Gyro"    ,"Gyroscope "      ,features$V2)
-features$V2=sub( "Jerk"    ,"Jerk "           ,features$V2)
-features$V2=sub( "Freq"    ,"Frequency "      ,features$V2)
-features$V2=sub( "f"       ,"Frequency "      ,features$V2)
-features$V2=sub( "t"       ,"Time "           ,features$V2)
-features$V2=sub( "Mag"     ,"Magnitude "      ,features$V2)
-features$V2=sub( "Acc"     ,"Accelerometer "  ,features$V2)
-features$V2=sub( "Gravity" ,"Gravity "        ,features$V2)
-features$V2=sub( "-mean"   ,"Mean "           ,features$V2)
-features$V2=sub( "-std"    ,"STD "            ,features$V2)
-features$V2=sub(Quote("()")," "               ,features$V2)
+features$V2=sub(  "BodyBody","Body"            ,features$V2, fixed=TRUE)
+features$V2=sub(  "Body"    ,"Body "           ,features$V2, fixed=TRUE)
+features$V2=sub(  "Gyro"    ,"Gyroscope "      ,features$V2, fixed=TRUE)
+features$V2=sub(  "Jerk"    ,"Jerk "           ,features$V2, fixed=TRUE)
+features$V2=sub(  "Freq"    ,"Frequency "      ,features$V2, fixed=TRUE)
+features$V2=sub(  "f"       ,"Frequency "      ,features$V2, fixed=TRUE)
+features$V2=sub(  "t"       ,"Time "           ,features$V2, fixed=TRUE)
+features$V2=sub(  "Mag"     ,"Magnitude "      ,features$V2, fixed=TRUE)
+features$V2=sub(  "Acc"     ,"Accelerometer "  ,features$V2, fixed=TRUE)
+features$V2=sub(  "Gravity" ,"Gravity "        ,features$V2, fixed=TRUE)
+features$V2=sub(  "mean"    ,"Mean "           ,features$V2, fixed=TRUE)
+features$V2=sub(  "std"     ,"STD "            ,features$V2, fixed=TRUE)
+features$V2=sub(  "angle"   ,"Angle "          ,features$V2, fixed=TRUE)
+features$V2=sub(  "gravity" ,"Gravity "        ,features$V2, fixed=TRUE)
+features$V2=gsub( ")"       ,""                ,features$V2, fixed=TRUE)
+features$V2=gsub( "("       ,""                ,features$V2, fixed=TRUE)
+features$V2=gsub( "-"       ,""                ,features$V2, fixed=TRUE)
+features$V2=gsub( ","       ," "               ,features$V2, fixed=TRUE)
+
 #Make Activity a factor, with new labels from activity_label
 activity_label=fread(paste0(DIR,"activity_labels.txt"     ))
 
@@ -58,7 +64,7 @@ colnames(Data)=c("Subject", "Activity", features$V2)
 #Keep only Mean and Standard deviation of each measurement
 
 #vector of TRUE/FALSE if it has mean or std in the measurement
-KeepColumns=grepl("mean",features$V2) | grepl("std",features$V2)
+KeepColumns=grepl("Mean",features$V2) | grepl("STD",features$V2)
 
 #Keep the first two columns, and columns that had mean or std
 #Which is used to convert TRUE FALSE into the positions on the vector that have TRUE
@@ -77,12 +83,10 @@ levels(Data$Activity)=activity_label$V2
 # Goal Five
 # # # # # # # # #
 #Create another dataset, containing average calue for each variable within an activity and subject
-TinyData=aggregate(Data[,3:81,with=FALSE],
+TinyData=aggregate(Data[,3:ncol(Data),with=FALSE],
                    by=list("Subject"=Data$Subject,"Activity"=Data$Activity),
                    FUN=mean)
 
 #For organization.. sort rows by subject and activity like TinyData is
 #not necessary..it just bothers me.
-Data2=Data[order(Data$Subject,Data$Activity),]
-
-
+Data=Data[order(Data$Subject,Data$Activity),]
