@@ -28,6 +28,19 @@ rm(Test,Train)
 
 #Load Features into a Data.Table
 features=      fread(paste0(DIR,"features.txt"            ))
+features$V2=sub( "BodyBody","Body "           ,features$V2)
+features$V2=sub( "Body"    ,"Body "           ,features$V2)
+features$V2=sub( "Gyro"    ,"Gyroscope "      ,features$V2)
+features$V2=sub( "Jerk"    ,"Jerk "           ,features$V2)
+features$V2=sub( "Freq"    ,"Frequency "      ,features$V2)
+features$V2=sub( "f"       ,"Frequency "      ,features$V2)
+features$V2=sub( "t"       ,"Time "           ,features$V2)
+features$V2=sub( "Mag"     ,"Magnitude "      ,features$V2)
+features$V2=sub( "Acc"     ,"Accelerometer "  ,features$V2)
+features$V2=sub( "Gravity" ,"Gravity "        ,features$V2)
+features$V2=sub( "-mean"   ,"Mean "           ,features$V2)
+features$V2=sub( "-std"    ,"STD "            ,features$V2)
+features$V2=sub(Quote("()")," "               ,features$V2)
 #Make Activity a factor, with new labels from activity_label
 activity_label=fread(paste0(DIR,"activity_labels.txt"     ))
 
